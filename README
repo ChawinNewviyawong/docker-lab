@@ -1,0 +1,45 @@
+Build Docker Image
+
+# 1. input start in package.json
+{
+  ...
+  "scripts": {
+    "start": "node index.json"
+    "test": "..."
+  },
+  ...
+}
+
+# 2. Create Dockerfile
+script is:
+--------------------------------------------------
+FROM node:8.4.0-alpine
+
+# Create app directory in docker
+RUN mkdir -p /usr/src/app 
+WORKDIR /usr/src/app
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json are copied
+# where available
+COPY package.json /usr/src/app
+
+RUN npm install
+# If you are building your code for production
+# RUN npm install --only=production
+
+# Bundle app source
+COPY . /usr/src/app
+
+EXPOSE 3000
+CMD ["npm", "start"]
+--------------------------------------------------
+
+# 3. Create .dockerignore
+input file name don't send into Docker Image
+
+# 4. Build Docker Image
+docker build -t <Docker Image Name> .
+
+# 5. try run
+docker run --name <name> -p <local port>:<docker port> <Docker Image Name>
